@@ -91,7 +91,7 @@ export default function CalendarComponent(){
     const [selectedDate,setSelectedDate] = useState(new Date());
     //get the date, month and year from selected date
     const activeDate = getDate(selectedDate);
-    const activeMonth = getMonth(selectedDate);
+    const activeMonth = getMonth(selectedDate)+1;
     const activeYear = getYear(selectedDate);
     //save date and year facts
     const [dateFact,setDateFact] = useState('');
@@ -99,51 +99,44 @@ export default function CalendarComponent(){
     const [isError,setIsError] = useState(false);
     const [isFetching,setIsFetching] = useState(false);
 
-    useEffect(()=>{
-        get_date_fact();
-        get_year_fact();
-    },[])
-
+    useEffect(() => {
     function get_date_fact(){
         //make the facts requests
         setIsFetching(true);
         axios({
             method:"GET",
-            url:`https://numbersapi.p.rapidapi.com/${activeDate}/${activeMonth}/date`,
+            url:`https://numbersapi.p.rapidapi.com/${activeMonth}/${activeDate}/date`,
             headers:{
-                "content-type":"application/octet-stream",
+                "content-type":"application/json",
                 "x-rapidapi-host":"numbersapi.p.rapidapi.com",
                 "x-rapidapi-key":"e94b61b478msh7dee581da5c28dep1726cfjsn0ddfcb013628"
-            },
-            params:{
-                "fragment":"true",
-                "json":"true"
             }
         })
-        .then(res=>{ setDateFact(res.data.text) })
+        .then(res=>{ setDateFact(res.data) })
         .catch(err=>{ setIsError(true) })
         .then(()=>{ setIsFetching(false) });
     }
+        get_date_fact()
+    },[selectedDate,activeMonth,activeDate])
 
+    useEffect(() => {
     function get_year_fact(){
         setIsFetching(true);
         axios({
             method: "GET",
             url:`https://numbersapi.p.rapidapi.com/${activeYear}/year`,
             headers:{
-                "content-type":"application/octet-stream",
+                "content-type":"application/json",
                 "x-rapidapi-host":"numbersapi.p.rapidapi.com",
                 "x-rapidapi-key":"e94b61b478msh7dee581da5c28dep1726cfjsn0ddfcb013628"
-            },
-            params:{
-                "fragment":"false",
-                "json":"true"
             }
         })
-        .then(res=>{ setYearFact(res.data.text) })
+        .then(res=>{ setYearFact(res.data) })
         .catch(err=>{ setIsError(true) })
         .then(()=>{ setIsFetching(false) });
     }
+        get_year_fact()
+    },[activeYear,selectedDate])
     //function to get our calendar header that includes current month, year and nav buttons
     function renderHeader(){
         const dateFormat = 'MMMM yyyy';
@@ -178,10 +171,7 @@ export default function CalendarComponent(){
         setIsError(false);
         //set the selected date
         setSelectedDate(day);
-        //get the facts
-        get_date_fact();
-        get_year_fact();
-
+        console.log(day)
     }
 
     //generate cells

@@ -36,17 +36,16 @@ function HomeComponent() {
             method:"GET",
             url:`https://numbersapi.p.rapidapi.com/${day}/math`,
             headers:{
-                "content-type":"application/octet-stream",
+                "content-type":"application/json",
                 "x-rapidapi-host":"numbersapi.p.rapidapi.com",
                 "x-rapidapi-key":"e94b61b478msh7dee581da5c28dep1726cfjsn0ddfcb013628"
             },
             params:{
                 "fragment":"false",
-                "json":"true"
             }
         })
         .then((response)=>{
-            setMath(response.data.number+' is '+response.data.text);
+            setMath(day+' is '+response.data);
         })
         .catch((error)=>{
             setIsError(true);
@@ -58,17 +57,16 @@ function HomeComponent() {
             method:"GET",
             url:`https://numbersapi.p.rapidapi.com/${day}/trivia`,
             headers:{
-                "content-type":"application/octet-stream",
+                "content-type":"application/json",
                 "x-rapidapi-host":"numbersapi.p.rapidapi.com",
                 "x-rapidapi-key":"e94b61b478msh7dee581da5c28dep1726cfjsn0ddfcb013628"
             },
             params:{
                 "fragment":"false",
-                "json":"true"
             }
         })
         .then((response)=>{
-            setTrivia(response.data.number+' is '+response.data.text);
+            setTrivia(day+' is '+response.data);
         })
         .catch((error)=>{
             setIsError(true);
@@ -80,17 +78,17 @@ function HomeComponent() {
             method:"GET",
             url:`https://numbersapi.p.rapidapi.com/${day}/${month}/date`,
             headers:{
-                "content-type":"application/octet-stream",
+                "content-type":"application/json",
                 "x-rapidapi-host":"numbersapi.p.rapidapi.com",
                 "x-rapidapi-key":"e94b61b478msh7dee581da5c28dep1726cfjsn0ddfcb013628"
             },
             params:{
                 "fragment":"false",
-                "json":"true"
             }
         })
         .then((res)=>{
-            setToday(`On this date in ${res.data.year}, ${res.data.text}`);
+            console.log(res)
+            setToday(`On this date, ${res.data}`);
         })
         .catch((error)=>{
             setIsError(true);
@@ -102,17 +100,16 @@ function HomeComponent() {
             method:"GET",
             url:`https://numbersapi.p.rapidapi.com/${current_year}/year`,
             headers:{
-                "content-type":"application/octet-stream",
+                "content-type":"application/json",
                 "x-rapidapi-host":"numbersapi.p.rapidapi.com",
                 "x-rapidapi-key":"e94b61b478msh7dee581da5c28dep1726cfjsn0ddfcb013628"
             },
             params:{
                 "fragment":"false",
-                "json":"true"
             }
         })
         .then((response)=>{
-            setYear('This year, '+response.data.text);
+            setYear('This year, '+response.data);
         })
         .catch((error)=>{
             setIsError(true);
