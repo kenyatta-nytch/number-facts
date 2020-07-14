@@ -1,12 +1,17 @@
 import React from 'react';
-import HomeComponent from './components/home';
-import FactPage from './components/factPage.js';
+import { Switch,Route } from 'react-router-dom';
+import HomeComponent from './components/homePage.js';
+import DateFactsPage from './components/datesFactsPage.js';
+import NumberFactsPage from './components/numberFactsPage.js';
 
 function App() {
   return (
     <div className="App">
-        <HomeComponent/>
-        <FactPage/>
+        <Switch>
+            <Route exact path='/' component={ HomeComponent }/>
+            <Route path='/dates' component={ DateFactsPage }/>
+            <Route path='/numbers' component={ NumberFactsPage }/>
+        </Switch>
     </div>
   );
 }

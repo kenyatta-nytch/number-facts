@@ -1,119 +1,82 @@
-import React,{useState,useEffect} from 'react';
-import axios from 'axios';
+import React,{useEffect,useRef} from 'react';
 import styled from 'styled-components';
-import {Card,Container,Content,ErrorMessage} from './comon.js';
+import {Container} from './comon';
+import {device} from '../device';
+
+const NumberContainer = styled(Container)`
+    flex: 1;
+    justify-content: center;
+`
 
 const InputContainer = styled(Container)`
-    height: 40%;
+    width: 80%;
+    min-width: 250px;
+    max-width: 620px;
+    height: 250px;
     justify-content: space-around;
+    border-radius: 16px;
+    background-color: #333;
     flex-direction: column;
-
-`
-const ResultContainer = styled(Container)`
-    height: 60%;
-    flex-direction: column;
+    @media ${device.tabletL}{
+        width: 90%;
+    }
+    @media ${device.laptopM}{
+        font-size: 200px;
+        height: 350px;
+    }
 `
 const StyledInput = styled.input`
     outline: none;
     border: none;
-    width: 90%;
-    font-size: 80px;
+    width: 100%;
+    font-size: 130px;
     padding: 5px 10px;
     text-align: center;
     border-radius: 4px;
-    color: #808080;
-    background: #fff;
+    color: #ddd;
+    background: transparent;
     transition: .5s ease;
-    &:hover{
-        background-color: #f5f5f5;
-    }
     &:focus{
-        outline: 1px solid #00ff0040;
-        backround-color: #f5f5f5;
+        outline: none;
+    }
+    @media ${device.laptop}{
+        font-size: 150px;
+    }
+    @media ${device.laptopM}{
+        font-size: 200px;
     }
 `
 const Text = styled.code`
     padding: 5px 10px;
+    width: 90%;
+    max-width: 325px;
     font-size: 16px;
-    background-color: #f5f5f5;
-    border-radius: 5px;
-    color: #00aa00;
+    text-align: center;
+    background-color: #aaa;
+    border-radius: 6px;
+    color: #ff1c60;
     box-shadow: 0 7px 14px -7px #00000040;
     cursor: pointer;
 `
-export default function NumberComponent(){
-    //input value constant and facts constants
-    const [value,setValue] = useState(Math.floor(Math.random()*1000));
-    const [fetchValue,setFetchValue] = useState()
-    const [trivia,setTrivia] = useState('');
-    const [math,setMath] = useState('');
-    const [isError,setIsError] = useState(false);
-    const [isFetching,setIsFetching] = useState(false);
+export default function NumberComponent({value,isFetching,setValue,handleClick}){
+    const input = useRef();
 
-    useEffect(() => {
-    //get trivia fact request
-    function get_trivia_fact(){
-        setIsFetching(true);
-        axios({
-            method: "GET",
-            url: `https://numbersapi.p.rapidapi.com/${value}/trivia`,
-            headers:{
-                "content-type":"application/json",
-                "x-rapidapi-host":"numbersapi.p.rapidapi.com",
-                "x-rapidapi-key":"e94b61b478msh7dee581da5c28dep1726cfjsn0ddfcb013628",
-            }
-        })
-        .then(res=>{ setTrivia(res.data) })
-        .catch(err=>{ 
-            setIsError(true);
-            console.log(err.message);
-        })
-        .then(()=>{ setIsFetching(false) });
-    }
-        get_trivia_fact()
-    },[fetchValue])
-
-    //make math fact request
-    useEffect(() => {
-    function get_math_fact(){
-        setIsFetching(true);
-        axios({
-            method: "GET",
-            url: `https://numbersapi.p.rapidapi.com/${value}/math`,
-            headers:{
-                "content-type":"application/json",
-                "x-rapidapi-host":"numbersapi.p.rapidapi.com",
-                "x-rapidapi-key":"e94b61b478msh7dee581da5c28dep1726cfjsn0ddfcb013628"
-            }
-        })
-        .then(res=>{ setMath(res.data) })
-        .catch(err=>{
-            setIsError(true);
-            console.log(err.message);
-        })
-        .then(()=>{ setIsFetching(false) });
-    }
-        get_math_fact()
-    },[fetchValue])
-
+    useEffect(() => input.current.focus())
     return(
-        <Card alt='true'>
-            <InputContainer>
-                <StyledInput
-                    name='number'
-                    type='number'
-                    value={value}
-                    min='0'
-                    required={true}
-                    disabled={isFetching? true : false}
-                    onChange={e=>setValue(e.target.value)}
-                />
-                <Text type='button' onClick={e=>setFetchValue(value)} disabled={isFetching}>Pick A Number then click me :)</Text>
-            </InputContainer>
-            <ResultContainer>
-                {isFetching? <Content>Getting Facts</Content> : isError? <ErrorMessage/> : <Content>{ trivia }</Content>}
-                {isFetching? <Content>Getting Facts</Content> : isError? <ErrorMessage/> : <Content>{ math }</Content>}
-            </ResultContainer>
-        </Card>
-    )
+        <NumberContainer>
+        <InputContainer>
+            <StyledInput
+                name='number'
+                type='number'
+                ref={input}
+                value={value}
+                min='0'
+                required={true}
+                disabled={isFetching}
+                onChange={e=>setValue(e.target.value)}
+            />
+             <Text type='button' onClick={() => handleClick()} disabled={isFetching}>Pick A Number then click me :)</Text>
+        </InputContainer>
+        </NumberContainer>
+    ) 
 }

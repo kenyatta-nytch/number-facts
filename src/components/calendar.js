@@ -1,57 +1,114 @@
-import React,{useState,useEffect} from 'react';
+import React,{useState} from 'react';
 import styled,{css} from 'styled-components';
-import axios from 'axios';
-import {format,toDate,addMonths,addDays,subMonths,startOfMonth,startOfWeek,endOfMonth,endOfWeek,isSameMonth,isSameDay,getDate,getMonth,getYear} from 'date-fns';
-import {Card,Container,Content,ErrorMessage} from './comon.js';
+import {format,toDate,addMonths,addDays,subMonths,startOfMonth,startOfWeek,endOfMonth,endOfWeek,isSameMonth,isSameDay} from 'date-fns';
+import {Container} from './comon';
+import {device} from '../device';
 
-const FactWrapper = styled(Container)`
-    flex-direction: column;
-    width: 500px;
+const CalendarContainer = styled(Container)`
+    flex: 1;
+    justify-content: center;
 `
 
 const Calendar = styled.div`
-    margin: 0 auto;
-    width: 500px;
-    height: 260px;
+    margin: 0;
+    width: 300px;
+    height: 350px;
     position: relative;
-    border: 1px solid #bbb;
-    border-radius: 4px;
+    border-radius: 12px;
+    background: #333;
+    display: flex;
+    flex-direction: column;
+    transition: .3s ease;
+    @media ${device.tablet}{
+        width: 400px;
+        height: 450px;
+    }
+    @media ${device.tabletL}{
+        width: 350px;
+        height: 400px;
+    }
+    @media ${device.laptopM}{
+        width: 450px;
+        height: 500px;
+    }
+    @media ${device.laptopL}{
+        width: 500px;
+        height: 550px;
+    }
 `
-const HeaderContainer = styled(Container)`
-    justify-content: space-between;
-    background-color: #fff;
+const CalendarHeader = styled.div`
+    flex: 2;
+    position: relative;
+`
+const CalendarBody = styled.div`
+    flex: 3;
+    display: flex;
+    flex-direction: column;
+
+`
+const HeaderContainer = styled.div`
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
 `
 const NavBtn = styled.div`
     cursor: pointer;
-    padding: 5px 10px;
+    width: 20px;
+    height: 100%;
     font-size: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #4444;
     transition: .5s ease;
-    &:hover{
-        background-color: rgba(0, 255, 0, 0.2);
-        color: #00aa00;
-    }
+    ${props => props.next && css`
+        right: 8px;
+        border-radius: 0 12px 0 0;
+    `}
+    ${props => props.prev && css`
+        left: 8px;
+        border-radius: 12px 0 0 0;
+    `}
 `
-const Header = styled.h3`
+const Header = styled.h1`
+    width: 100%;
     margin: 0;
+    font-size: ${props => props.year? '32px':'50px'};
+    text-align: center;
+    font-weight: 600px;
+    color: #ff1c60;
     text-transform: uppercase;
 `
-const DaysContainer = styled(Container)`
+const YearMonth = styled.div`
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+`
+const WeekDayContainer = styled(Container)`
     justify-content: space-evenly;
-    background-color: #eee;
+    background-color: #444;
 `
 const WeekDay = styled.p`
     margin: 0;
     width: 70px;
-    padding: 10px;
+    padding: 10px 0;
+    color: #ddd;
     font-weight: bold;
-    font-size: 18px;
+    font-size: 16px;
     text-align: center;
     text-transform: uppercase;
 `
-const CellContainer = styled.div`
+const MonthContainer = styled.div`
+    flex: 1;
+    display: flex;
+    flex-direction: column;
     position: relative;
 `
 const Week = styled.div`
+    flex: 1;
     position: relative;
     width: 100%;
     display: flex;
@@ -61,90 +118,37 @@ const Week = styled.div`
 const Cell = styled.div`
     cursor: pointer;
     width: 70px;
-    height: 30px;
-    padding: 0 10px;
+    height: 100%;
+    padding: 0;
     display: flex;
+    color: #fff;
     justify-content: center;
     align-items: center;
-    border-radius: 4px;
     border: none;
     transition: .5s ease;
-    &:hover{
-        background-color: rgba(0, 255, 0, .2);
-    }
     ${props => props.disabled && css`
-        background-color: #f5f5f5;
+        color: #999;
     `}
     ${props => props.selected && css`
-        background-color: rgba(0, 255, 0, .2);
-        color: #00aa00;
+        background-color: #fff1;
+        color: #fff;
+        font-weight: 600px;
     `}
 `
-const Title = styled(Content)`
-    padding: 5px 0;
-    color: #00aa00;
-
-`
-export default function CalendarComponent(){
+export default function CalendarComponent({selectedDate,setSelectedDate}){
     //save current and selected days
     const [currentDate,setCurrentDate] = useState(new Date());
-    const [selectedDate,setSelectedDate] = useState(new Date());
-    //get the date, month and year from selected date
-    const activeDate = getDate(selectedDate);
-    const activeMonth = getMonth(selectedDate)+1;
-    const activeYear = getYear(selectedDate);
-    //save date and year facts
-    const [dateFact,setDateFact] = useState('');
-    const [yearFact,setYearFact] = useState('');
-    const [isError,setIsError] = useState(false);
-    const [isFetching,setIsFetching] = useState(false);
-
-    useEffect(() => {
-    function get_date_fact(){
-        //make the facts requests
-        setIsFetching(true);
-        axios({
-            method:"GET",
-            url:`https://numbersapi.p.rapidapi.com/${activeMonth}/${activeDate}/date`,
-            headers:{
-                "content-type":"application/json",
-                "x-rapidapi-host":"numbersapi.p.rapidapi.com",
-                "x-rapidapi-key":"e94b61b478msh7dee581da5c28dep1726cfjsn0ddfcb013628"
-            }
-        })
-        .then(res=>{ setDateFact(res.data) })
-        .catch(err=>{ setIsError(true) })
-        .then(()=>{ setIsFetching(false) });
-    }
-        get_date_fact()
-    },[selectedDate,activeMonth,activeDate])
-
-    useEffect(() => {
-    function get_year_fact(){
-        setIsFetching(true);
-        axios({
-            method: "GET",
-            url:`https://numbersapi.p.rapidapi.com/${activeYear}/year`,
-            headers:{
-                "content-type":"application/json",
-                "x-rapidapi-host":"numbersapi.p.rapidapi.com",
-                "x-rapidapi-key":"e94b61b478msh7dee581da5c28dep1726cfjsn0ddfcb013628"
-            }
-        })
-        .then(res=>{ setYearFact(res.data) })
-        .catch(err=>{ setIsError(true) })
-        .then(()=>{ setIsFetching(false) });
-    }
-        get_year_fact()
-    },[activeYear,selectedDate])
+        
     //function to get our calendar header that includes current month, year and nav buttons
     function renderHeader(){
-        const dateFormat = 'MMMM yyyy';
         return(
             <HeaderContainer>
-                <NavBtn onClick={e=>prevMonth()}> Prev </NavBtn>
-                <Header>{ format(currentDate,dateFormat) }</Header>
-                <NavBtn onClick={e=>nextMonth()}> Next </NavBtn>
+                <NavBtn onClick={e=>prevMonth()} prev={true}/>
+                <YearMonth>
+                    <Header>{ format(currentDate,'MMMM') }</Header>
+                    <Header year={true}>{ format(currentDate,'yyyy') }</Header>
+                </YearMonth>
+                <NavBtn onClick={e=>nextMonth()} next={true}/>
             </HeaderContainer>
         )
     }
@@ -155,23 +159,16 @@ export default function CalendarComponent(){
 
     //function to render days of the week
     function renderWeekDays(){
-        const dateFormat = 'EEE';
-        const days = [];
+        const dateFormat = 'EEEEEE';
+        const weekDays = [];
         let startDate = startOfWeek(currentDate);
 
         for (let i = 0; i < 7; i++){
-            days.push(
+            weekDays.push(
                 <WeekDay key={i}>{ format(addDays(startDate, i), dateFormat) }</WeekDay>
             );
         }
-        return <DaysContainer>{ days }</DaysContainer>;
-    }
-
-    const onDateClick = day => {
-        setIsError(false);
-        //set the selected date
-        setSelectedDate(day);
-        console.log(day)
+        return weekDays
     }
 
     //generate cells
@@ -196,7 +193,7 @@ export default function CalendarComponent(){
                         key={day}
                         disabled={!isSameMonth(day, monthStart)}
                         selected={isSameDay(day, selectedDate)}
-                        onClick={()=> onDateClick(toDate(cloneDay))}
+                        onClick={()=> setSelectedDate(toDate(cloneDay))}
                     >{ formattedDate }</Cell>
                 );
                 day = addDays(day, 1);
@@ -206,21 +203,18 @@ export default function CalendarComponent(){
             days = [];
         }
 
-        return <CellContainer>{ rows }</CellContainer>;
+        return rows
     }
 
     return(
-        <Card alt='true'>
-            <Calendar>
-                <Container>{ renderHeader() }</Container>
-                <Container>{ renderWeekDays() }</Container>
-                <Container>{ renderCells() }</Container>
-            </Calendar>
-            <Title>Pick A Date</Title>
-            <FactWrapper>
-                { isFetching?<Content>Getting facts</Content> : isError? <ErrorMessage/> : <Content small>{ dateFact }</Content> }
-                { isFetching?<Content>Getting facts</Content> : isError? <ErrorMessage/> : <Content small>{ yearFact }</Content> }
-            </FactWrapper>
-        </Card>
+        <CalendarContainer>
+        <Calendar>
+            <CalendarHeader>{ renderHeader() }</CalendarHeader>
+            <CalendarBody>
+                <WeekDayContainer>{ renderWeekDays() }</WeekDayContainer>
+                <MonthContainer>{ renderCells() }</MonthContainer>
+            </CalendarBody>
+        </Calendar>
+        </CalendarContainer>
     )
 }

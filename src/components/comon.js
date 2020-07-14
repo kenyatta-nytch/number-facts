@@ -1,8 +1,9 @@
 import React from 'react';
+import Typing from 'react-typing-animation';
 import styled,{css} from 'styled-components';
 
 export const PageWrapper = styled.div`
-    background: ${props => props.facts? '#ff007780' : '#acc6fc'};
+    background: #222;
     height: 100vh;
     position: relative;
     display: flex;
@@ -20,11 +21,6 @@ export const Container = styled.div`
     width: 100%;
     display: flex;
     align-items: center;
-    ${props=>props.nav && css`
-        border-bottom: 2px solid #bbb;
-        height: 10%;
-        justify-content: center;
-    `}
     ${props=>props.content && css`
         height: 90%;
         justify-content: center;
@@ -40,6 +36,16 @@ export const Content = styled.p`
 `
 export const StyledError = styled.p`
     color: #ff195e;
+`
+const MessageWrapper = styled.div`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+`
+const LoadingMessage = styled.p`
+    color: #808080;
+    margin: 0;
+    font-size: 26px;
 `
 
 export const Card = styled.div`
@@ -57,3 +63,21 @@ export function ErrorMessage(){
         <StyledError>Something wrong happended</StyledError>
     )
 }
+
+export function GettingFacts(){
+    return(
+        <MessageWrapper>
+            <Typing startDelay={1000}>
+                <LoadingMessage>Collecting Facts...</LoadingMessage>
+                <Typing.Backspace count={19} delay={2000}/>
+                <Typing.Delay ms={1000}/>
+                <LoadingMessage>Patience Please :)</LoadingMessage>
+            </Typing>
+        </MessageWrapper>
+    )
+}
+
+
+
+//********//
+export const trial_data = 'Proident dolore amet consectetur consequat est ex. Minim magna et do consectetur consequat.'

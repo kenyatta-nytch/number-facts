@@ -1,57 +1,128 @@
-import React,{useState} from 'react';
+import React,{useState,useEffect} from 'react';
 import styled,{css} from 'styled-components';
-import {Container,Content,ErrorMessage} from './comon.js';
+import { Transition } from 'react-transition-group';
+import {Content,ErrorMessage} from './comon.js';
+import {device} from '../device';
 
 const FactWrapper = styled.div`
+    flex: 1;
     width: 100%;
-    height: 100%;
-    position: relative;
-
-`
-const Link = styled.p`
-    cursor: pointer;
-    margin: 0 5px;
-    padding: 5px;
-    border-radius: 2px;
-    font-size: 17px;
-    color: #bbb;
-    font-weight: bold;
-    ${props=>props.active && css`
-        color: #008000;
-        background-color: rgba(0, 255, 0, 0.2);
-    `}
-`
-
-export default function FactComponent({math,trivia,today,year,error}){
-    const [active,setActive] = useState('today');
-
-    //function to switch displays
-    function displays(){
-        switch(active){
-            case 'today':
-                return <Content>{today === ''?'Chill, Im getting my facts': today }</Content>
-            case 'trivia':
-                return <Content>{trivia === ''?'Chill, Im getting my facts': trivia }</Content>
-            case 'math':
-                return <Content>{math === ''?'Chill, Im getting my facts': math }</Content>
-            case 'year':
-                return <Content>{year === ''?'Chill, Im getting my facts': year }</Content>
-            default:
-                return undefined;
-        }
+    max-width: 500px;
+    display: flex;
+    padding: 20px 0;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    @media ${device.mobileL}{
+        width: 400px;
     }
-    
-    return(
-        <FactWrapper>
-            <Container nav>
-                <Link active={active === 'math'} onClick={e=>setActive('math')}>Math</Link>
-                <Link active={active === 'trivia'} onClick={e=>setActive('trivia')}>Trivia</Link>
-                <Link active={active === 'today'} onClick={e=>setActive('today')}>Today</Link>
-                <Link active={active === 'year'} onClick={e=>setActive('year')}>Year</Link>
-            </Container>
-            <Container content>
-                {error? <ErrorMessage/> : displays()}
-            </Container>
-        </FactWrapper>
-    )
+    @media ${device.tablet}{
+        width: 500px;
+    }
+    @media ${device.tabletL}{
+        flex: 1;
+        padding: 0 20px;
+    }
+    @media ${device.laptopM}{${props => props.home && css`
+        flex: none;
+        position: absolute;
+        right: 100px;
+        top: 0;
+        z-index: 9;
+        background-color: #222;
+    `}}
+
+`
+const FactContent = styled.p`
+    margin: 0;
+    width: 100%;
+    color: #ddd;
+    padding: 10px;
+    font-size: ${props => props.home? '16px':'18px'};
+    text-align: center;
+    position: relative;
+    right: -100%;
+    opacity: 0;
+    transition: 1s ease;
+    ${props => props.state === 'entering' && css`
+        right: -100%;
+        opacity: 0;
+    `}
+    ${props => props.state === 'entered' && css`
+        right: 0;
+        opacity: 1;
+    `}
+    ${props => props.state === 'exiting' && css`
+        right: -100%;
+        opacity: 0.5;
+    `}
+    ${props => props.state === 'exited' && css`
+        right: -100%;
+        opacity: 0;
+    `}
+    @media ${device.laptop}{
+        font-size: 20px;
+    }
+    @media ${device.laptopM}{
+        font-size: 22px;
+    }
+    @media ${device.laptop}{
+        font-size: 24px;
+    }
+`
+
+export default function FactComponent({type,math,trivia,today,year,error}){
+    const [inProp,setProp] = useState(false);
+
+    useEffect(() => {
+        setProp(true);
+        return () => setProp(false);
+    },[])
+
+    if( error ) return <ErrorMessage/>
+
+    switch(type){
+        case 'home':
+        return(
+            <FactWrapper home={true}>
+                <Transition in={inProp} timeout={500}>
+                    {state => <FactContent home={true} state={state}>{math}</FactContent>}
+                </Transition>
+                <Transition in={inProp} timeout={1000}>
+                    {state => <FactContent home={true} state={state}>{trivia}</FactContent>}
+                </Transition>
+                <Transition in={inProp} timeout={1500}>
+                    {state => <FactContent home={true} state={state}>{today}</FactContent>}
+                </Transition>
+                <Transition in={inProp} timeout={2000}>
+                    {state => <FactContent home={true} state={state}>{year}</FactContent>}
+                </Transition>
+            </FactWrapper>
+        )
+        case 'dates':
+            return(
+                <FactWrapper>
+                    <Transition in={inProp} timeout={500}>
+                        {state => <FactContent state={state}>{ today }</FactContent>}
+                    </Transition>
+                    <Transition in={inProp} timeout={1000}>
+                        {state => <FactContent state={state}>{ year }</FactContent>}
+                    </Transition>
+                </FactWrapper>
+            )
+        case 'numbers':
+            return(
+                <FactWrapper>
+                    <Transition in={inProp} timeout={500}>
+                        {state => <FactContent state={state}>{ trivia }</FactContent>}
+                    </Transition>
+                    <Transition in={inProp} timeout={1000}>
+                        {state => <FactContent state={state}>{ math }</FactContent>}
+                    </Transition>
+                </FactWrapper>
+            )
+        default:
+            return null;
+    }
 }
+    
