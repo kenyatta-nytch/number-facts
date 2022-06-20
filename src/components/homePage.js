@@ -4,7 +4,6 @@ import { Transition } from 'react-transition-group';
 import axios from 'axios';
 import Navigation from './navigation';
 import FactComponent from './facts';
-import { trial_data,GettingFacts } from './comon';
 import {device} from '../device';
 
 const HomeWrapper = styled.div`
@@ -263,7 +262,10 @@ function HomeComponent() {
             <Transition in={inProp} timeout={1000}>
                 {state => 
                     <HomeDate state={state}>
-                        <DateDisplay>{ today_date.toLocaleString('default',{ day: 'numeric',year: 'numeric' }) }</DateDisplay>
+                        <DateDisplay>
+                            <span>{ today_date.toLocaleString('default', { year: 'numeric' }) } </span>
+                            <span>{ today_date.toLocaleString('default', { day: 'numeric' }) }</span>
+                        </DateDisplay>
                         <DateDisplay>{ today_date.toLocaleString('default',{month: 'long'}) }</DateDisplay>
                     </HomeDate>
                 }

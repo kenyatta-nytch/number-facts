@@ -1,5 +1,5 @@
 import React from 'react';
-import Typing from 'react-typing-animation';
+// import Typing from 'react-typing-animation';
 import styled,{css} from 'styled-components';
 
 export const PageWrapper = styled.div`
@@ -64,18 +64,6 @@ export function ErrorMessage(){
     )
 }
 
-export function GettingFacts(){
-    return(
-        <MessageWrapper>
-            <Typing startDelay={1000}>
-                <LoadingMessage>Collecting Facts...</LoadingMessage>
-                <Typing.Backspace count={19} delay={2000}/>
-                <Typing.Delay ms={1000}/>
-                <LoadingMessage>Patience Please :)</LoadingMessage>
-            </Typing>
-        </MessageWrapper>
-    )
-}
 
 
 
