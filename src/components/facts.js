@@ -25,10 +25,6 @@ const FactWrapper = styled.div`
     }
     @media ${device.laptopM}{${props => props.home && css`
         flex: none;
-        position: absolute;
-        right: 100px;
-        top: 0;
-        z-index: 9;
         background-color: #222;
     `}}
 

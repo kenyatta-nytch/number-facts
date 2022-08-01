@@ -78,9 +78,6 @@ const HomeMain = styled.div`
         flex-direction: row;
         justify-content: space-around;
     }
-    @media ${device.laptopM}{
-        justify-content: flex-start;
-    }
 `
 const HomeFooter = styled.div`
     height: 80px;
@@ -104,6 +101,7 @@ const HomeDate = styled.div`
     transition: 1s ease;
     display: flex;
     justify-content: center;
+    flex-direction: column;
 
     ${props => props.state === 'entered' && css`
         opacity: 1;
@@ -114,7 +112,7 @@ const HomeDate = styled.div`
     }
     @media ${device.laptopM}{
         flex: none;
-        margin: 0 100px;
+        margin: 0 50px;
     }
 `
 const DateDisplay = styled.h1`
@@ -262,10 +260,8 @@ function HomeComponent() {
             <Transition in={inProp} timeout={1000}>
                 {state => 
                     <HomeDate state={state}>
-                        <DateDisplay>
-                            <span>{ today_date.toLocaleString('default', { year: 'numeric' }) } </span>
-                            <span>{ today_date.toLocaleString('default', { day: 'numeric' }) }</span>
-                        </DateDisplay>
+                        <DateDisplay>{ today_date.toLocaleString('default', { year: 'numeric' }) }</DateDisplay>
+                        <DateDisplay>{ today_date.toLocaleString('default', { day: 'numeric' }) }</DateDisplay>
                         <DateDisplay>{ today_date.toLocaleString('default',{month: 'long'}) }</DateDisplay>
                     </HomeDate>
                 }
