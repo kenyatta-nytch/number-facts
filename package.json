@@ -40,6 +40,5 @@
   },
   "devDependencies": {
     "gh-pages": "^3.0.0"
-  },
-  "homepage": "http://kenyatta-nytch.github.io/numbers"
+  }
 }
