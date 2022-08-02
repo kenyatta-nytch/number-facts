@@ -34,7 +34,7 @@ const FactContent = styled.p`
     width: 100%;
     color: #ddd;
     padding: 10px;
-    font-size: ${props => props.home? '16px':'18px'};
+    font-size: ${props => props.home? '18px':'20px'};
     text-align: center;
     position: relative;
     right: -100%;
@@ -57,13 +57,13 @@ const FactContent = styled.p`
         opacity: 0;
     `}
     @media ${device.laptop}{
-        font-size: 20px;
+        font-size: 24px;
     }
     @media ${device.laptopM}{
-        font-size: 22px;
+        font-size: 26px;
     }
     @media ${device.laptop}{
-        font-size: 24px;
+        font-size: 28px;
     }
 `
 

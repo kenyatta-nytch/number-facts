@@ -62,6 +62,11 @@ export default function NumberComponent({value,isFetching,setValue,handleClick})
     const input = useRef();
 
     useEffect(() => input.current.focus())
+
+    // handle enter click
+    const handleKeyPress = val => {
+        if (val === 'Enter') handleClick();
+    }
     return(
         <NumberContainer>
         <InputContainer>
@@ -73,7 +78,8 @@ export default function NumberComponent({value,isFetching,setValue,handleClick})
                 min='0'
                 required={true}
                 disabled={isFetching}
-                onChange={e=>setValue(e.target.value)}
+                onChange={e => setValue(e.target.value)}
+                onKeyUp={e => handleKeyPress(e.key)}
             />
              <Text type='button' onClick={() => handleClick()} disabled={isFetching}>Pick A Number then click me :)</Text>
         </InputContainer>
