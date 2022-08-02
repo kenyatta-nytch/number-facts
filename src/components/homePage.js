@@ -139,7 +139,8 @@ function HomeComponent() {
     const today_date = new Date();
     //in prop for transition
     const [inProp, setInProp] = useState(false);
-    const [fetching,setFetching] = useState(false);
+    // eslint-disable-next-line no-unused-vars
+    const [fetching, setFetching] = useState(false);
 
     //set in prop true on mount and false on unmount
     useEffect(() => {

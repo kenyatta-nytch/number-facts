@@ -35,7 +35,7 @@ export default function DateFactsPage(){
     const [dateFact,setDateFact] = useState('');
     const [yearFact,setYearFact] = useState('');
     const [isError,setIsError] = useState(false);
-    const [isFetching,setIsFetching] = useState(false);
+    // const [isFetching,setIsFetching] = useState(false);
 
     //fetch facts
     useEffect(() => {

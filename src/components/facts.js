@@ -1,7 +1,7 @@
 import React,{useState,useEffect} from 'react';
 import styled,{css} from 'styled-components';
 import { Transition } from 'react-transition-group';
-import {Content,ErrorMessage} from './comon.js';
+import { ErrorMessage } from './comon.js';
 import {device} from '../device';
 
 const FactWrapper = styled.div`

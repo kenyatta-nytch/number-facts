@@ -15,9 +15,6 @@ const NavSection = styled.div`
     justify-content: center;
     align-items: center;
 `
-const NavLogo = styled.img`
-
-`
 const Link = styled(NavLink)`
     text-decoration: none;
     margin: 0 10px;

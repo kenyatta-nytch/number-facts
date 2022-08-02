@@ -1,5 +1,4 @@
 import React from 'react';
-// import Typing from 'react-typing-animation';
 import styled,{css} from 'styled-components';
 
 export const PageWrapper = styled.div`
@@ -36,16 +35,6 @@ export const Content = styled.p`
 `
 export const StyledError = styled.p`
     color: #ff195e;
-`
-const MessageWrapper = styled.div`
-    display: flex;
-    justify-content: center;
-    align-items: center;
-`
-const LoadingMessage = styled.p`
-    color: #808080;
-    margin: 0;
-    font-size: 26px;
 `
 
 export const Card = styled.div`
