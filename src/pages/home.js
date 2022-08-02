@@ -2,8 +2,8 @@ import React,{useState,useEffect} from 'react';
 import styled,{css} from 'styled-components';
 import { Transition } from 'react-transition-group';
 import axios from 'axios';
-import Navigation from './navigation';
-import FactComponent from './facts';
+import Navigation from '../components/navigation';
+import FactComponent from '../components/facts';
 import {device} from '../device';
 
 const HomeWrapper = styled.div`

@@ -1,8 +1,8 @@
 import React,{useState,useEffect} from 'react';
 import styled from 'styled-components';
-import Navigation from './navigation';
-import NumberComponent from './numberInput';
-import FactComponent from './facts';
+import Navigation from '../components/navigation';
+import NumberComponent from '../components/numberInput';
+import FactComponent from '../components/facts';
 import {device} from '../device';
 
 const NumberPage = styled.div`
@@ -25,7 +25,7 @@ const PageContent = styled.div`
     }
 `
 
-export default function NumberFactsPage(){
+export default function NumberFacts(){
     //input value constant and facts constants
     const [inputValue,setValue] = useState(Math.floor(Math.random()*1000));
     const [fetchValue,setFetch] = useState(inputValue);

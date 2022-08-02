@@ -1,9 +1,9 @@
 import React,{useState,useEffect} from 'react';
 import styled from 'styled-components';
 import {getDate,getMonth,getYear} from 'date-fns';
-import Navigation from './navigation';
-import CalendarComponent from './calendar';
-import FactComponent from './facts';
+import Navigation from '../components/navigation';
+import CalendarComponent from '../components/calendar';
+import FactComponent from '../components/facts';
 import {device} from '../device';
 
 const DatePage = styled.div`
@@ -25,7 +25,7 @@ const PageContent = styled.div`
     }
 `
 
-export default function DateFactsPage(){
+export default function DateFacts(){
     const [selectedDate,setSelectedDate] = useState(new Date());
     //const for fetching facts from api 
     const activeDate = getDate(selectedDate);

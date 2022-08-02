@@ -1,16 +1,16 @@
 import React from 'react';
 import { Switch,Route } from 'react-router-dom';
-import HomeComponent from './components/homePage.js';
-import DateFactsPage from './components/datesFactsPage.js';
-import NumberFactsPage from './components/numberFactsPage.js';
+import HomeComponent from './pages/home.js';
+import DateFacts from './pages/dates.js';
+import NumberFacts from './pages/numbers.js';
 
 function App() {
   return (
     <div className="App">
         <Switch>
             <Route exact path='/' component={ HomeComponent }/>
-            <Route path='/dates' component={ DateFactsPage }/>
-            <Route path='/numbers' component={ NumberFactsPage }/>
+            <Route path='/dates' component={ DateFacts }/>
+            <Route path='/numbers' component={ NumberFacts }/>
         </Switch>
     </div>
   );
